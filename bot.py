@@ -307,6 +307,13 @@ async def generate_deepseek_response(session_id: int, user_text: str) -> str:
         "X-Title": "Discord AI Bot"
     }
 
+    payload = {
+        "model": model,
+        "messages": messages,
+        "temperature": 0.7,
+        "max_tokens": 2048
+    }
+
     try:
         timeout = aiohttp.ClientTimeout(total=75)
         async with aiohttp.ClientSession(timeout=timeout) as session:
@@ -969,9 +976,19 @@ async def cmd_model(ctx: commands.Context, *, new_model: str = ""):
 
     m = new_model.strip()
     bot_config["model"] = m
+    extra_note = ""
+    if "/" in m and "openrouter.ai" not in bot_config.get("base_url", ""):
+        bot_config["base_url"] = "https://openrouter.ai/api/v1"
+        update_env_variable("DEEPSEEK_BASE_URL", "https://openrouter.ai/api/v1")
+        extra_note = "\n🌐 *Đã tự động chuyển Base URL sang OpenRouter (`https://openrouter.ai/api/v1`)!*"
+    elif m in ["deepseek-chat", "deepseek-reasoner"] and "openrouter.ai" in bot_config.get("base_url", ""):
+        bot_config["base_url"] = "https://api.deepseek.com"
+        update_env_variable("DEEPSEEK_BASE_URL", "https://api.deepseek.com")
+        extra_note = "\n🌐 *Đã tự động chuyển Base URL về DeepSeek gốc (`https://api.deepseek.com`)!*"
+
     save_config(bot_config)
     update_env_variable("DEEPSEEK_MODEL", m)
-    await ctx.reply(f"✅ **Đã chuyển sang model AI:** `{m}`", mention_author=False)
+    await ctx.reply(f"✅ **Đã chuyển sang model AI:** `{m}`{extra_note}", mention_author=False)
 
 
 @bot.command(name="models")
