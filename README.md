@@ -1,86 +1,101 @@
-# 🤖 DeepSeek Discord Bot (Toàn Quyền Điều Khiển Trực Tiếp Trên VPS)
+# 🤖 AI Discord Bot — Multi-Provider Edition
 
-Bot Discord AI tích hợp trực tiếp **DeepSeek API** (`deepseek-chat` / `deepseek-reasoner`), **chạy song song bảng điều khiển Terminal trực tiếp trên VPS/Termux**, hỗ trợ **tự động cập nhật code từ GitHub**, **phím tắt dòng lệnh tự chạy prompt**, và **đổi linh hoạt 1 hoặc cả 2 API**.
+Bot Discord AI hỗ trợ nhiều nhà cung cấp (**DeepSeek**, **OpenRouter**, **Groq**, **OpenAI**, **Gemini**), tích hợp **bảng điều khiển CLI trực tiếp trên Terminal/VPS/Termux**, hỗ trợ **phím tắt prompt tự chạy**, **tự động cập nhật code từ GitHub**, và **đổi API Key / Model ngay tại máy chủ**.
 
 ---
 
 ## 🚀 1. Hướng Dẫn Cài Đặt Trên VPS / Termux
 
-### Bước 1: Cài thư viện Python
+### Bước 1: Cài thư viện Python cần thiết
 ```bash
 pip install discord.py python-dotenv
 ```
+*(Ghi chú: Không cần cài thư viện `openai` hay trình biên dịch Rust, tương thích hoàn toàn 100% với Termux).*
 
 ### Bước 2: Khởi chạy Bot
 ```bash
 python bot.py
 ```
-> 🌟 **Lần đầu chạy:** Bot sẽ hỏi trực tiếp trên màn hình VPS để bạn nhập Token Discord và DeepSeek API Key.
+> 🌟 **Lần đầu chạy:** Bot sẽ hỏi bạn nhập `Discord Bot Token` và `AI API Key` trực tiếp trên màn hình terminal.
 
 ---
 
-## 💻 2. BẢNG LỆNH TOÀN QUYỀN ĐIỀU KHIỂN TRỰC TIẾP TRÊN VPS
+## 💻 2. BẢNG LỆNH ĐIỀU KHIỂN TRÊN MÁY CHỦ (TERMINAL / VPS / TERMUX)
 
-Khi bot kết nối thành công, màn hình VPS sẽ hiện giao diện dòng lệnh:
+Khi bot chạy, terminal hiển thị:
 ```text
-[VPS-Admin] > 
+[VPS] > 
 ```
 
-### 🔄 Cập Nhật Code Mới Từ GitHub:
-- `update` : Kéo code mới nhất từ GitHub (`git pull`) và tự khởi động lại bot.
-- `autoupdate on` / `autoupdate off` : Bật hoặc tắt tính năng tự động kiểm tra code mới mỗi 30 phút.
+### 🧠 Model & Nhà Cung Cấp AI:
+- `model` : Mở menu chọn nhanh 13 model bằng số:
+  - `[ 1]` DeepSeek V3 Free (OpenRouter)
+  - `[ 2]` DeepSeek R1 Free (OpenRouter)
+  - `[ 3]` Gemini 2.0 Flash Free (OpenRouter)
+  - `[ 4]` Gemini 2.5 Pro Free (OpenRouter)
+  - `[ 5]` Llama 3.3 70B Free (OpenRouter)
+  - `[ 6]` Qwen 2.5 72B Free (OpenRouter)
+  - `[ 7]` Mistral 7B Free (OpenRouter)
+  - `[ 8]` DeepSeek V3 (Chính chủ)
+  - `[ 9]` DeepSeek R1 Reasoner (Chính chủ)
+  - `[10]` Llama 3.3 70B (Groq - Siêu nhanh)
+  - `[11]` Mixtral 8x7B (Groq)
+  - `[12]` GPT-4o Mini (OpenAI)
+  - `[13]` GPT-4o (OpenAI)
+- `model <tên_model>` : Đổi trực tiếp sang tên model bất kỳ.
+- `provider <tên> [key]` : Chuyển nhanh nhà cung cấp:
+  - `provider openrouter [key]` — Chuyển sang OpenRouter (Dùng model Free)
+  - `provider deepseek [key]` — Chuyển sang DeepSeek chính chủ
+  - `provider groq [key]` — Chuyển sang Groq Cloud
+  - `provider openai [key]` — Chuyển sang OpenAI
+- `seturl <url>` : Đổi URL API tùy chỉnh.
 
-### 🔑 Đổi 1 API Hoặc Cả 2 API:
-- `api` : Mở menu lựa chọn:
-  - `[1]` Chỉ đổi DeepSeek API Key (AI)
-  - `[2]` Chỉ đổi Discord Bot Token
-  - `[3]` Đổi cả hai API
-- `setkey deepseek <key>` : Đổi riêng DeepSeek API Key *(Áp dụng ngay tức thì)*
-- `setkey discord <token>` : Đổi riêng Discord Bot Token *(Lưu vào .env)*
-- `setkey both <deepseek_key> <discord_token>` : Đổi cả 2 trong 1 dòng lệnh.
-- `restart` : Khởi động lại bot trên VPS.
+### 🔑 Đổi API Key & Token:
+- `api` : Menu tương tác đổi API Key / Discord Token.
+- `setkey ai <key>` : Đổi riêng AI API Key *(áp dụng tức thì)*.
+- `setkey discord <token>` : Đổi riêng Discord Bot Token.
 
-### ⚡ Phím Tắt Tự Chạy Prompt (Shortcuts / Không Cần Gõ Prompt Dài):
+### ⚡ Phím Tắt Tự Chạy Prompt (Shortcuts):
 - `shortcuts` : Xem danh sách phím tắt hiện có.
-- `shortcut add <tên> <nội dung prompt dài>` : Thêm một phím tắt mới.
-  *(Ví dụ: `shortcut add dich Hãy dịch văn bản sau sang tiếng Anh chuẩn bản ngữ:`)*
+- `shortcut add <tên> <prompt>` : Thêm phím tắt mới (vd: `shortcut add dich Hãy dịch sang tiếng Anh:`).
 - `shortcut del <tên>` : Xóa phím tắt.
 
 ### 👑 Quản Lý Chủ Nhân & Admin:
-- `owners` : Xem danh sách tất cả các Chủ nhân tối cao.
-- `addowner <user_id>` : Thêm một Chủ nhân mới (có toàn quyền như bạn).
-- `delowner <user_id>` : Xóa bớt một Chủ nhân.
-- `addadmin <user_id>` / `deladmin <user_id>` : Thêm / Xóa Admin phụ.
+- `owners` : Xem danh sách ID tất cả Chủ nhân tối cao.
+- `addowner <id>` : Thêm Chủ nhân mới.
+- `delowner <id>` : Xóa bớt Chủ nhân.
+- `admins` / `addadmin <id>` / `deladmin <id>` : Quản lý Admin phụ.
 
-### 👥 Quản Lý Người Xài:
-- `users` : Xem danh sách ID người được phép xài bot.
-- `add <user_id>` : Cấp quyền cho một người dùng.
-- `del <user_id>` : Thu hồi quyền của một người dùng.
+### 👥 Phân Quyền Sử Dụng:
+- `users` : Xem danh sách người trong Whitelist.
+- `add <id>` / `del <id>` : Thêm hoặc xóa người dùng được phép chat.
+- `mode restricted` : Chỉ người trong Whitelist mới được dùng bot.
+- `mode public` : Mở quyền cho toàn bộ thành viên server.
 
-### 🧠 Tính Cách & Cấu Hình AI:
-- `prompt` : Xem System Prompt hiện tại.
-- `setprompt <nội dung>` : Đổi System Prompt tính cách AI.
-- `resetprompt` : Khôi phục Prompt về mặc định ban đầu.
-- `mode <restricted|public>` : Đổi chế độ: chỉ whitelist hoặc mở cho cả server.
-- `setmodel <chat|reasoner>` : Đổi model giữa `deepseek-chat` (V3) và `deepseek-reasoner` (R1).
-- `stop` (hoặc `exit`) : Tắt bot an toàn từ VPS.
+### 🔄 Cập Nhật Code & Hệ Thống:
+- `update` : Kéo code mới từ GitHub (`git pull`) và tự khởi động lại bot.
+- `autoupdate on|off` : Bật/tắt tự động kiểm tra code mới mỗi 30 phút.
+- `prompt` / `setprompt <nội dung>` / `resetprompt` : Quản lý System Prompt.
+- `status` : Xem trạng thái hoạt động tổng quan.
+- `restart` : Khởi động lại tiến trình bot.
+- `stop` : Tắt bot an toàn.
 
 ---
 
-## 💬 3. DÀNH CHO NGƯỜI DÙNG & QUẢN TRỊ TRÊN DISCORD
+## 💬 3. LỆNH TRÊN DISCORD
 
-| Lệnh trên Discord | Người được dùng | Mô tả chức năng |
+| Lệnh | Quyền hạn | Mô tả |
 | :--- | :--- | :--- |
-| `!ask <câu hỏi>` | Mọi người (đã cấp quyền) | Trò chuyện, đặt câu hỏi thông thường cho AI |
-| `!<tên_phím_tắt> <nội dung>` | Mọi người (đã cấp quyền) | **Tự động áp dụng prompt dài đã cài sẵn!**<br>Ví dụ: `!dich Hello world`<br>Ví dụ: `!fixcode print("hi")`<br>Ví dụ: `!tomtat <đoạn văn dài>` |
-| `!shortcuts` | Mọi người | Xem danh sách tất cả phím tắt prompt hiện có |
-| `!shortcut add <tên> <prompt>` | Admin & Chủ nhân | Tạo thêm phím tắt prompt tùy chỉnh mới |
-| `!shortcut del <tên>` | Admin & Chủ nhân | Xóa bớt một phím tắt |
-| `!update` | Chủ nhân | Kéo code mới nhất từ GitHub và tự động khởi động lại bot |
-| `!setting` (hoặc `!settings`)| Admin & Chủ nhân | **Xem và điều chỉnh cài đặt:** mode, model, prompt, max history... |
-| `!owners` | Admin & Chủ nhân | Xem danh sách tất cả các Chủ nhân tối cao |
-| `!addowner @user` | Chủ nhân | Thêm một Chủ nhân mới |
-| `!delowner @user` | Chủ nhân | Xóa bớt một Chủ nhân |
-| `!grant @user` / `!add @user` | Admin & Chủ nhân | Thêm người dùng vào Whitelist |
-| `!revoke @user` / `!del @user` | Admin & Chủ nhân | Xóa người dùng khỏi Whitelist |
-| `!clear` | Mọi người | Xóa ngữ cảnh hội thoại cũ của kênh |
+| `!ask <câu hỏi>` (hoặc `!ai <câu hỏi>`) | Thành viên hợp lệ | Chat, hỏi đáp với AI |
+| `!<shortcut> <nội dung>` | Thành viên hợp lệ | Áp dụng ngay prompt dài (vd: `!dich text`, `!fixcode code`) |
+| `!shortcuts` | Mọi người | Xem danh sách các phím tắt hiện có |
+| `!models` | Mọi người | Xem danh sách model AI được gợi ý |
+| `!model` | Mọi người | Xem model AI hiện tại đang dùng |
+| `!model <tên>` | Admin & Chủ nhân | Đổi model AI đang chạy |
+| `!shortcut add <tên> <prompt>` | Admin & Chủ nhân | Tạo phím tắt prompt mới |
+| `!shortcut del <tên>` | Admin & Chủ nhân | Xóa phím tắt |
+| `!grant @user` / `!revoke @user` | Admin & Chủ nhân | Cấp hoặc thu hồi quyền dùng bot |
+| `!setting` | Admin & Chủ nhân | Bảng tổng hợp cài đặt bot |
+| `!owners` / `!addowner @user` / `!delowner @user` | Chủ nhân | Quản lý Chủ nhân tối cao |
+| `!update` | Chủ nhân | Kéo code mới từ GitHub và tự reload |
+| `!clear` | Mọi người | Xóa ngữ cảnh đoạn chat của kênh hiện tại |
